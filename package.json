@@ -7,6 +7,7 @@
     "start": "node index.js",
 
     "study-room:test": "mocha --watch ./tests/study-room.test.js",
+    "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
 
     "tests": "mocha --watch tests/"
   },
