@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/vdenisov-dev/lds-js-oop/issues"
   },
-  "homepage": "https://github.com/vdenisov-dev/lds-js-oop#readme"
+  "homepage": "https://github.com/vdenisov-dev/lds-js-oop#readme",
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
 }
