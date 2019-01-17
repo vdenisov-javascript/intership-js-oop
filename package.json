@@ -7,6 +7,8 @@
     "start": "node index.js",
 
     "study-room:test": "mocha --watch ./tests/study-room.test.js",
+
+    "product-movement": "node ./tasks/product-movement/run.js",
     "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
 
     "tests": "mocha --watch tests/"
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/vdenisov-dev/lds-js-oop#readme",
   "devDependencies": {
+    "cli-table3": "^0.5.1",
     "mocha": "^5.2.0"
   }
 }
