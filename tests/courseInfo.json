@@ -1,0 +1,52 @@
+{
+  "name": "JavaScript Course",
+  "themes": [
+
+    {
+      "title": "Data structures",
+      "questions": [
+
+        {
+          "description": "How to create empty Array 'fakes' with length = 5 ?",
+          "answers": [
+            {   "text": "fakes = new Array(5)",   "isCorrect": true   },
+            {   "text": "fakes = [] * 5",         "isCorrect": false  }
+          ]
+        },
+
+        {
+          "description": "How to get keys of Object 'book' ?",
+          "answers": [
+            {   "text": "Object.keys( book )",    "isCorrect": true   },
+            {   "text": "book.keys()",            "isCorrect": false  }
+          ]
+        }
+
+      ]
+    },
+
+    {
+      "title": "Object-oriented programming",
+      "questions": [
+
+        {
+          "description": "How to extend class B from class A ?",
+          "answers": [
+            {   "text": "class B extends A {}",   "isCorrect": true   },
+            {   "text": "class B: A {}",          "isCorrect": false  }
+          ]
+        },
+
+        {
+          "description": "How to make functions of parent class available ?",
+          "answers": [
+            {   "text": "Call function 'super ()' in constructor",         "isCorrect": true   },
+            {   "text": "Features of parent class are always available",   "isCorrect": false  }
+          ]
+        }
+
+      ]
+    }
+
+  ]
+}

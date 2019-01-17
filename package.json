@@ -4,7 +4,11 @@
   "description": "JavaScript - OOP",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+
+    "study-room:test": "mocha --watch ./tests/study-room.test.js",
+
+    "tests": "mocha --watch tests/"
   },
   "repository": {
     "type": "git",
