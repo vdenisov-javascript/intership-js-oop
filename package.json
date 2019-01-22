@@ -11,6 +11,8 @@
     "product-movement": "node ./tasks/product-movement/run.js",
     "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
 
+    "company-model:test": "mocha --watch ./tests/company-model.test.js",
+
     "tests": "mocha --watch tests/"
   },
   "repository": {
