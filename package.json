@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-
+    
     "study-room:test": "mocha --watch ./tests/study-room.test.js",
-
+    
     "product-movement": "node ./tasks/product-movement/run.js",
     "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
 
@@ -25,6 +25,8 @@
   "homepage": "https://github.com/vdenisov-dev/lds-js-oop#readme",
   "devDependencies": {
     "cli-table3": "^0.5.1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "ts-node": "^8.0.1",
+    "typescript": "^3.2.4"
   }
 }
