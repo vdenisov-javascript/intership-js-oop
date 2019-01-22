@@ -11,7 +11,8 @@
     "product-movement": "node ./tasks/product-movement/run.js",
     "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
 
-    "company-model": "node ./tasks/company-model/run.ts",
+    "company-model": "ts-node ./tasks/company-model/run.ts",
+    "company-model:alt-run": "tsc ./tasks/company-model/run.ts && node ./tasks/company-model/run.js",
     "company-model:test": "mocha --watch ./tests/company-model.test.js",
 
     "tests": "mocha --watch tests/"
