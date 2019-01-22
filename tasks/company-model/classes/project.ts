@@ -1,4 +1,4 @@
-import { getRandomElementFromArray } from './../helpers';
+import { getRandomElementFromArray } from '../helpers';
 
 let lastId = 0;
 
