@@ -1,26 +1,29 @@
-import { getRandomElementFromArray } from '../helpers';
+export interface IProject {
+  _id: number;
 
-let lastId = 0;
-
-const variantsFor = {
-  type: [ 'web', 'mobile' ],
-  level: [ 1, 2, 3 ]
+  type: string;
+  level: number;
+  status: string;
+  daysBeforeDeadline: number;
 }
 
-export class Project {
+
+export class Project implements IProject {
+
+  private static _lastId = 0;
 
   public _id: number;
-  public type: string;
-  public level: number;
   public status: string;
-  public deadLine: number;
+  public daysBeforeDeadline: number;
 
-  constructor() {
-    this._id = ++lastId;
-    this.type = getRandomElementFromArray(variantsFor.type);
-    this.level = getRandomElementFromArray(variantsFor.level);
+  constructor(
+    public type: string,
+    public level: number,
+  ) {
+    this._id = ++Project._lastId;
     this.status = 'new';
-    this.deadLine = this.level;
+
+    this.daysBeforeDeadline = this.level;
   }
 
 }
