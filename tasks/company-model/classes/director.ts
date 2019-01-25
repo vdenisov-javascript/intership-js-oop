@@ -1,11 +1,5 @@
-import {
-  Project, IProject,
-  ICompany,
-  IDepartment
-} from './';
-
-
-import * as helpers from './../helpers';
+import { Project, IProject, ICompany, IDepartment } from './';
+import * as helpers from './../shared/helpers';
 
 
 export interface IDirector {
@@ -14,15 +8,17 @@ export interface IDirector {
   newProjects: Array<IProject>;
   awaitingProjects: Array<IProject>;
   completedProjects: Array<IProject>; 
-  
-  webProjects: Array<IProject>;
-  mobileProjects: Array<IProject>;
-  testingProjects: Array<IProject>;
 
-  // PRIVATE
-  // webDepartment: IDepartment;
-  // mobileDepartment: IDepartment;
-  // testingDepartment: IDepartment;
+  webDepartment: IDepartment;
+  mobileDepartment: IDepartment;
+  testingDepartment: IDepartment;
+
+  getNewProjects(count?: number): void;
+  distributeNewProjects(): void;
+  distributeAwaitingProjects(): void;
+  subtractCurrentDay(): void;
+  checkExecutedProjectsForEachDepartment(): void;
+  collectStatisticsFromEachDepartment(): Object;
 }
 
 
@@ -35,19 +31,14 @@ export class Director implements IDirector {
   };
 
   // departments
-  private webDepartment: IDepartment;
-  private mobileDepartment: IDepartment;
-  private testingDepartment: IDepartment;
+  public webDepartment: IDepartment;
+  public mobileDepartment: IDepartment;
+  public testingDepartment: IDepartment;
 
   // projects in buffer
   public newProjects: Array<IProject>;
   public awaitingProjects: Array<IProject>;
-  public completedProjects: Array<IProject>; 
-
-  // projects in departments
-  public webProjects: Array<IProject>;
-  public mobileProjects: Array<IProject>;
-  public testingProjects: Array<IProject>;
+  public completedProjects: Array<IProject>;
 
   constructor(
     public name: string
@@ -55,10 +46,6 @@ export class Director implements IDirector {
     this.newProjects = [];
     this.awaitingProjects = [];
     this.completedProjects = [];
-
-    this.webProjects = [];
-    this.mobileProjects = [];
-    this.testingProjects = [];    
   }
 
   // get access to departments
@@ -69,11 +56,12 @@ export class Director implements IDirector {
   }
 
   // get (generate) new projects
-  public getNewProjects() {
-    // const count = Math.floor(
-    //   Math.random() * Director.maxProjectsForDay 
-    // );
-    const count = 10;
+  public getNewProjects(count?: number) {
+    if (!count) {
+      count = Math.floor(
+        Math.random() * Director.maxProjectsForDay 
+      );
+    }
     
     for (let i = 0; i < count; i ++) {
       this.newProjects.push(
@@ -114,24 +102,18 @@ export class Director implements IDirector {
   // if this department has enough resources
   private transferProject(proj: IProject) {
     let chosenDepart: IDepartment;
-    let chosenBuffer: Array<IProject>; 
 
-    if (proj.status !== 'test') {
-
-      (proj.type === 'web')
-      ? [ chosenDepart, chosenBuffer ] = [ this.webDepartment, this.webProjects ]
-      : [ chosenDepart, chosenBuffer ] = [ this.mobileDepartment, this.mobileProjects ];
-
+    if (proj.status === 'new') {
+      chosenDepart = (proj.type === 'web') ? this.webDepartment : this.mobileDepartment;
     } else {
-
-      [ chosenDepart, chosenBuffer ] = [ this.testingDepartment, this.testingProjects ];
-
+      chosenDepart = this.testingDepartment;
     }
 
     const isDepartHasResources = chosenDepart.checkResourcesForProject(proj);
     
     if (isDepartHasResources) {
-      chosenBuffer.push(proj);
+      // chosenBuffer.push(proj);
+      chosenDepart.currentProjects.push(proj);
       chosenDepart.beginExecutionOfProject(proj);
       return true;
     } else {
@@ -139,11 +121,74 @@ export class Director implements IDirector {
     }
   }
 
+  public hireEmployeesForAwaitingProjects() {
+    const needToHire = { web: 0, mobile: 0, testing: 0 };
+
+    for (const proj of this.awaitingProjects) {
+      if (proj.status === 'new') {
+        if (proj.type === 'web') needToHire.web += 1;
+        else needToHire.mobile += proj.level;
+      } else {
+        needToHire.testing += 1;
+      }
+    }
+
+    this.webDepartment.hireEmployeesInAmountOf( needToHire.web );
+    this.mobileDepartment.hireEmployeesInAmountOf( needToHire.mobile );
+    this.testingDepartment.hireEmployeesInAmountOf( needToHire.testing );
+  }
+
+  public checkExecutedProjectsForEachDepartment() {
+    // projects for testing
+    this.awaitingProjects.push(
+      ...this.webDepartment.executedProjects,
+      ...this.mobileDepartment.executedProjects,
+    );
+    this.webDepartment.executedProjects = [];
+    this.mobileDepartment.executedProjects = [];
+
+    // projects for deletion
+    this.completedProjects.push(
+      ...this.testingDepartment.executedProjects,
+    );
+    this.testingDepartment.executedProjects = [];
+  }
+
+  public fireLaziestEmployeeFromEachDepartment() {
+    this.webDepartment.fireLaziestEmployee();
+    this.mobileDepartment.fireLaziestEmployee();
+    this.testingDepartment.fireLaziestEmployee();
+  }
+
   // days -= 1
   public subtractCurrentDay() {
-    this.webDepartment.completeThisDay();
-    this.mobileDepartment.completeThisDay();
-    this.testingDepartment.completeThisDay();
+    this.webDepartment.completeDayForEmployees();
+    this.mobileDepartment.completeDayForEmployees();
+    this.testingDepartment.completeDayForEmployees();
+  }
+
+  public collectStatisticsFromEachDepartment(): Object {
+    const totalStats = {
+      hiredEmployees: 0,
+      firedEmployees: 0,
+      completedProjects: 0,
+    };
+
+    const webStats = this.webDepartment.getStatisticForEmployees();
+    totalStats.hiredEmployees += webStats['hiredEmployees'];
+    totalStats.firedEmployees += webStats['firedEmployees'];
+
+    const mobileStats = this.mobileDepartment.getStatisticForEmployees();
+    totalStats.hiredEmployees += mobileStats['hiredEmployees'];
+    totalStats.firedEmployees += mobileStats['firedEmployees'];
+
+    const testingStats = this.mobileDepartment.getStatisticForEmployees();
+    totalStats.hiredEmployees += testingStats['hiredEmployees'];
+    totalStats.firedEmployees += testingStats['firedEmployees'];
+    
+    totalStats.completedProjects = this.completedProjects.length;
+
+    return totalStats;
   }
   
 }

@@ -10,6 +10,9 @@ export interface IEmployee {
 
   skills: number;
   relaxDays: number;
+
+  takeProject(project: IProject): void;
+  leaveProject(): void;
 }
 
 
@@ -37,13 +40,13 @@ export class Employee implements IEmployee {
     this.relaxDays = 0;
   }
 
-  public takeProject(project: IProject) {
+  public takeProject(project: IProject): void {
     this.status = 'busy';
     this.currentProject = project;
     this.relaxDays = 0;
   }
 
-  public leaveProject() {
+  public leaveProject(): void {
     this.status = 'free';
     this.currentProject = null;
     this.skills += 1;
