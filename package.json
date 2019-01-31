@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    
+    "study-room": "node ./tasks/study-room/run.js",
     "study-room:test": "mocha --watch ./tests/study-room.test.js",
-    "product-movement": "node ./tasks/product-movement/run.js",
+
+    "product-movement": "node ./tasks/product-movement/run.js",    
     "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
+    
     "company-model": "ts-node ./tasks/company-model/run.ts",
     "company-model:alt-run": "tsc ./tasks/company-model/run.ts && node ./tasks/company-model/run.js",
     "company-model:test": "mocha --watch ./tests/company-model.test.js",
-    "tests": "mocha --watch tests/"
+    
+    "test": "mocha --watch tests/"
   },
   "repository": {
     "type": "git",
@@ -24,6 +29,7 @@
   },
   "homepage": "https://github.com/vdenisov-dev/lds-js-oop#readme",
   "devDependencies": {
+    "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "ts-node": "^8.0.1",
     "typescript": "^3.2.4"
