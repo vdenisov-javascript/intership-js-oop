@@ -1,4 +1,5 @@
 import { Director, Company, ICompany } from './classes';
+import * as helpers from './shared/helpers';
 import 'colors';
 
 
@@ -29,6 +30,17 @@ function startCompanyDuring(days = 10) {
         DAY #${ day }: start
   `.bgWhite.black.bold);
 
+  // Print: awaiting projects 
+  {
+    console.log(`
+      yesterday AWAITING projects
+    `.bgYellow.red.italic);
+
+    for (let proj of johnGreen.awaitingProjects) {
+      console.log(JSON.stringify( proj ));
+    }
+  }
+
   // YESTERDAY PROJECTS {
 
     // Step: hire employees for awaiting projects
@@ -42,7 +54,7 @@ function startCompanyDuring(days = 10) {
   // TODAY PROJECTS {
 
     // Step: get new projects
-    johnGreen.getNewProjects(4);
+    johnGreen.getNewProjects();
 
     // Print: new projects 
     {
@@ -61,7 +73,7 @@ function startCompanyDuring(days = 10) {
     // Print: awaiting projects 
     {
       console.log(`
-        AWAITING projects
+        today AWAITING projects
       `.bgYellow.red.italic);
 
       for (let proj of johnGreen.awaitingProjects) {
@@ -133,7 +145,10 @@ function startCompanyDuring(days = 10) {
 
       console.log(`total : ${johnGreen.completedProjects.length}`)
 
-      for (let proj of johnGreen.completedProjects) {
+      const completedProjectsSorted = johnGreen.completedProjects
+        .sort( helpers.sortArrayOfObjectsByKey('_id', false) );
+
+      for (let proj of completedProjectsSorted) {
         console.log(`* id = ${proj._id}\t=>`, JSON.stringify( proj ));
       }
     }
@@ -151,7 +166,7 @@ function startCompanyDuring(days = 10) {
 }
 
 
-const statistic = startCompanyDuring(7);
+const statistic = startCompanyDuring(100);
 console.log(
   '\n\n >>> TOTAL STATISTICS <<< \n\n',
   JSON.stringify(statistic, null, 4)

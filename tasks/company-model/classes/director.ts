@@ -63,7 +63,7 @@ export class Director implements IDirector {
       );
     }
     
-    for (let i = 0; i < count; i ++) {
+    for (let i = 0; i <= count; i ++) {
       this.newProjects.push(
         new Project(
           // random type

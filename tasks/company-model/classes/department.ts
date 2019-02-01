@@ -106,12 +106,26 @@ export class Department implements IDepartment {
 
     for (let project of this.currentProjects) {
       project.daysBeforeDeadline -= 1;
-      if (project.daysBeforeDeadline < 1) {
-        project.status = (project.status === 'new') ? 'testing' : 'completed';
+      if (project.daysBeforeDeadline === 0) {
+
+        if (project.status === 'new') {
+          project.status = 'testing';
+          project.daysBeforeDeadline = 1;
+        } else {
+          project.status = 'completed';
+        }
+
         this.executedProjects.push(project);
       } else {
         currProjArr.push(project);
       }
+      // project.daysBeforeDeadline -= 1;
+      // if (project.daysBeforeDeadline < 1) {
+      //   project.status = (project.status === 'new') ? 'testing' : 'completed';
+      //   this.executedProjects.push(project);
+      // } else {
+      //   currProjArr.push(project);
+      // }
     }
 
     this.currentProjects = currProjArr;
@@ -141,9 +155,7 @@ export class Department implements IDepartment {
   }
 
   public fireLaziestEmployee() {
-    const freeArr = [ ...this.freeEmployees ];
-
-    const lazyEmployees = freeArr.filter((employee: IEmployee) => {
+    const lazyEmployees = this.freeEmployees.filter((employee: IEmployee) => {
       return employee.relaxDays > Department.maxLazyDaysForEmployee;
     });
 
