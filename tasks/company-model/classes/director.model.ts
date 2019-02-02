@@ -1,5 +1,5 @@
-import { Project, IProject, ICompany, IDepartment } from './';
-import * as helpers from './../shared/helpers';
+import { Project, IProject, ICompany, IDepartment } from '.';
+import * as helpers from '../shared/helpers';
 
 
 export interface IDirector {

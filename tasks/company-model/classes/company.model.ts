@@ -1,4 +1,4 @@
-import { IDirector, Department, IDepartment } from './';
+import { IDirector, Department, IDepartment } from '.';
 
 
 export interface ICompany {

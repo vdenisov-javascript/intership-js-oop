@@ -1,5 +1,5 @@
-import { IProject, Employee, IEmployee } from './';
-import * as helpers from './../shared/helpers';
+import { IProject, Employee, IEmployee } from '.';
+import * as helpers from '../shared/helpers';
 
 
 export interface IDepartment {

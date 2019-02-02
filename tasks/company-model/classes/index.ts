@@ -1,5 +1,5 @@
-export { Director, IDirector } from './director';
-export { Company, ICompany } from './company';
-export { Department, IDepartment } from './department';
-export { Project, IProject } from './project';
-export { Employee, IEmployee } from './employee';
+export { Director, IDirector } from './director.model';
+export { Company, ICompany } from './company.model';
+export { Department, IDepartment } from './department.model';
+export { Project, IProject } from './project.model';
+export { Employee, IEmployee } from './employee.model';
