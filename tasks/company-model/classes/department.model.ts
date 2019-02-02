@@ -13,8 +13,8 @@ export class Department {
   public freeEmployees: Array<Employee>;
   public busyEmployees: Array<Employee>;
 
-  counterHiredEmployees: number;
-  counterFiredEmployees: number;
+  public counterHiredEmployees: number;
+  public counterFiredEmployees: number;
 
   constructor(
     public name: string,
@@ -31,10 +31,10 @@ export class Department {
   }
 
   public checkResourcesForProject(project: Project): boolean {
-    if (project.status === 'new') {
-      return (project.type === 'web')
+    if (project.checkThatStatusIs('new')) {
+      return project.checkThatTypeIs('web')
         ? this.freeEmployees.length >= 1
-        : this.freeEmployees.length >= project.level;
+        : this.freeEmployees.length >= project.getLevel()
     } else {
       return this.freeEmployees.length >= 1;
     }
@@ -43,8 +43,8 @@ export class Department {
   public beginExecutionOfProject(project: Project): void {
     let requiredCount: number;
     
-    if (project.status === 'new') {
-      requiredCount = (project.type === 'web') ? 1 : project.level;
+    if (project.checkThatStatusIs('new')) {
+      requiredCount = project.checkThatTypeIs('web') ? 1 : project.getLevel();
     } else {
       requiredCount = 1;
     }
@@ -83,27 +83,17 @@ export class Department {
     const currProjArr = [];
 
     for (let project of this.currentProjects) {
-      project.daysBeforeDeadline -= 1;
-      if (project.daysBeforeDeadline === 0) {
+      project.reduceDeadline()
+      if (project.checkThatTimeOut()) {
 
-        if (project.status === 'new') {
-          project.status = 'testing';
-          project.daysBeforeDeadline = 1;
-        } else {
-          project.status = 'completed';
-        }
+        project.checkThatStatusIs('new')
+          ? project.testProject()
+          : project.completeProject();
 
         this.executedProjects.push(project);
       } else {
         currProjArr.push(project);
       }
-      // project.daysBeforeDeadline -= 1;
-      // if (project.daysBeforeDeadline < 1) {
-      //   project.status = (project.status === 'new') ? 'testing' : 'completed';
-      //   this.executedProjects.push(project);
-      // } else {
-      //   currProjArr.push(project);
-      // }
     }
 
     this.currentProjects = currProjArr;
@@ -119,7 +109,7 @@ export class Department {
     const [ freeArr, busyArr,  ] = [ [], [] ];
 
     for (let employee of this.busyEmployees) {
-      if (employee.currentProject.daysBeforeDeadline < 1) {
+      if (employee.currentProject.checkThatTimeOut()) {
         employee.leaveProject();
         freeArr.push(employee);
       } else {

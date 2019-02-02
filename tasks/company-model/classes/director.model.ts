@@ -40,15 +40,8 @@ export class Director {
   public getNewProjects(count?: number) {
     const needToCreate = count || _.random(0, Director.maxProjectsForDay);
     
-    for (let i = 0; i <= needToCreate; i ++) {
-      this.newProjects.push(
-        new Project(
-          // random type
-          _.sample( Director.variantsForProject.type ),
-          // random level
-          _.sample( Director.variantsForProject.level ),
-        )
-      );
+    for (let i = 0; i < needToCreate; i ++) {
+      this.newProjects.push(new Project());
     }
   }
 
