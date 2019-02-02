@@ -1,28 +1,8 @@
-import { Project, IProject, ICompany, IDepartment } from '.';
+import { Project, Company, Department } from './';
 import * as helpers from '../shared/helpers';
 
 
-export interface IDirector {
-  name: string;
-
-  newProjects: Array<IProject>;
-  awaitingProjects: Array<IProject>;
-  completedProjects: Array<IProject>; 
-
-  webDepartment: IDepartment;
-  mobileDepartment: IDepartment;
-  testingDepartment: IDepartment;
-
-  getNewProjects(count?: number): void;
-  distributeNewProjects(): void;
-  distributeAwaitingProjects(): void;
-  subtractCurrentDay(): void;
-  checkExecutedProjectsForEachDepartment(): void;
-  collectStatisticsFromEachDepartment(): Object;
-}
-
-
-export class Director implements IDirector {
+export class Director {
 
   private static maxProjectsForDay = 4;
   private static variantsForProject = {
@@ -31,14 +11,14 @@ export class Director implements IDirector {
   };
 
   // departments
-  public webDepartment: IDepartment;
-  public mobileDepartment: IDepartment;
-  public testingDepartment: IDepartment;
+  public webDepartment: Department;
+  public mobileDepartment: Department;
+  public testingDepartment: Department;
 
   // projects in buffer
-  public newProjects: Array<IProject>;
-  public awaitingProjects: Array<IProject>;
-  public completedProjects: Array<IProject>;
+  public newProjects: Array<Project>;
+  public awaitingProjects: Array<Project>;
+  public completedProjects: Array<Project>;
 
   constructor(
     public name: string
@@ -49,7 +29,7 @@ export class Director implements IDirector {
   }
 
   // get access to departments
-  public manage(company: ICompany, ...departmentsNames: Array<string>) {
+  public manage(company: Company, ...departmentsNames: Array<string>) {
     departmentsNames.forEach((depName: string) => {
       this[ depName ] = company[ depName ];
     });
@@ -78,7 +58,7 @@ export class Director implements IDirector {
   // distribute new projects to departments
   public distributeNewProjects() {
     const buffer = [];
-    this.newProjects.forEach((proj: IProject) => {
+    this.newProjects.forEach((proj: Project) => {
       const success = this.transferProject( proj );
       // console.log('success', success);
       if (!success) buffer.push(proj);
@@ -90,7 +70,7 @@ export class Director implements IDirector {
   // distribute awaiting projects to departments
   public distributeAwaitingProjects() {
     const buffer = [];
-    this.awaitingProjects.forEach((proj: IProject) => {
+    this.awaitingProjects.forEach((proj: Project) => {
       const success = this.transferProject( proj );
       if (!success) buffer.push(proj);
     });
@@ -100,8 +80,8 @@ export class Director implements IDirector {
 
   // check type of project and transfer it to department
   // if this department has enough resources
-  private transferProject(proj: IProject) {
-    let chosenDepart: IDepartment;
+  private transferProject(proj: Project) {
+    let chosenDepart: Department;
 
     if (proj.status === 'new') {
       chosenDepart = (proj.type === 'web') ? this.webDepartment : this.mobileDepartment;

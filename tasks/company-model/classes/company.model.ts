@@ -1,26 +1,19 @@
-import { IDirector, Department, IDepartment } from '.';
+import { Director, Department } from './';
 
 
-export interface ICompany {
-  name: string;
-  director: IDirector;
+export class Company {
 
-  webDepartment?: IDepartment;
-  mobileDepartment?: IDepartment;
-  testingDepartment?: IDepartment;
-
-  createDepartment(name: string, speciality: string): void;
-}
-
-
-export class Company implements ICompany {
+  public webDepartment: Department;
+  public mobileDepartment: Department;
+  public testingDepartment: Department;
 
   constructor(
     public name: string,
-    public director: IDirector,
+    public director: Director,
   ) {}
 
   public createDepartment(name: string, speciality: string): void {
     this[name] = new Department(name, speciality);
   }
+
 }

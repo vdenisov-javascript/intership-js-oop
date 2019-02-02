@@ -1,39 +1,16 @@
-import { IProject, Employee, IEmployee } from '.';
+import { Employee, Project } from './';
 import * as helpers from '../shared/helpers';
 
 
-export interface IDepartment {
-  name: string;
-  speciality: string;
-
-  currentProjects: Array<IProject>;
-  executedProjects: Array<IProject>;
-
-  freeEmployees: Array<IEmployee>;
-  busyEmployees: Array<IEmployee>;
-
-  counterHiredEmployees: number;
-  counterFiredEmployees: number;
-
-  checkResourcesForProject(project: IProject): boolean;
-  beginExecutionOfProject(project: IProject): void;
-  completeDayForEmployees(): void;
-
-  hireEmployeesInAmountOf(count: number): void;
-  fireLaziestEmployee(): void;
-  getStatisticForEmployees(): void;
-}
-
-
-export class Department implements IDepartment {
+export class Department {
 
   private static maxLazyDaysForEmployee = 3;
 
-  public currentProjects: Array<IProject>;
-  public executedProjects: Array<IProject>;
+  public currentProjects: Array<Project>;
+  public executedProjects: Array<Project>;
 
-  public freeEmployees: Array<IEmployee>;
-  public busyEmployees: Array<IEmployee>;
+  public freeEmployees: Array<Employee>;
+  public busyEmployees: Array<Employee>;
 
   counterHiredEmployees: number;
   counterFiredEmployees: number;
@@ -52,7 +29,7 @@ export class Department implements IDepartment {
     this.counterFiredEmployees = 0;
   }
 
-  public checkResourcesForProject(project: IProject): boolean {
+  public checkResourcesForProject(project: Project): boolean {
     if (project.status === 'new') {
       return (project.type === 'web')
         ? this.freeEmployees.length >= 1
@@ -62,7 +39,7 @@ export class Department implements IDepartment {
     }
   }
 
-  public beginExecutionOfProject(project: IProject): void {
+  public beginExecutionOfProject(project: Project): void {
     let requiredCount: number;
     
     if (project.status === 'new') {
@@ -155,7 +132,7 @@ export class Department implements IDepartment {
   }
 
   public fireLaziestEmployee() {
-    const lazyEmployees = this.freeEmployees.filter((employee: IEmployee) => {
+    const lazyEmployees = this.freeEmployees.filter((employee: Employee) => {
       return employee.relaxDays > Department.maxLazyDaysForEmployee;
     });
 
@@ -164,7 +141,7 @@ export class Department implements IDepartment {
       .shift();
 
     if (candidate) {
-      this.freeEmployees = this.freeEmployees.filter((employee: IEmployee) => {
+      this.freeEmployees = this.freeEmployees.filter((employee: Employee) => {
         employee._id !== candidate._id;
       });
 

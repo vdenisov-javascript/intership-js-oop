@@ -4,17 +4,7 @@ enum ProjectStatus {
 }
 
 
-export interface IProject {
-  _id: number;
-
-  type: string;
-  level: number;
-  status: ProjectStatus;
-  daysBeforeDeadline: number;
-}
-
-
-export class Project implements IProject {
+export class Project {
 
   private static _lastId = 0;
 
