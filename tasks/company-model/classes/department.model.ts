@@ -1,5 +1,6 @@
+import * as _ from 'lodash';
+
 import { Employee, Project } from './';
-import * as helpers from '../shared/helpers';
 
 
 export class Department {
@@ -136,9 +137,7 @@ export class Department {
       return employee.relaxDays > Department.maxLazyDaysForEmployee;
     });
 
-    const candidate = lazyEmployees
-      .sort( helpers.sortArrayOfObjectsByKey('skills', false) )
-      .shift();
+    const candidate = _.orderBy(lazyEmployees, ['asc'], ['desc']).shift();
 
     if (candidate) {
       this.freeEmployees = this.freeEmployees.filter((employee: Employee) => {

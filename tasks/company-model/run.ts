@@ -1,13 +1,14 @@
-import { Director, Company, ICompany } from './classes';
-import * as helpers from './shared/helpers';
 import 'colors';
+import * as _ from 'lodash';
+
+import { Director, Company } from './classes';
 
 
 function startCompanyDuring(days = 10) {
 
   // create director and company
   const johnGreen = new Director('John Green');
-  const enterprise: ICompany = new Company('Enterprise', johnGreen);
+  const enterprise = new Company('Enterprise', johnGreen);
 
   // create departments in company
   const [ webDep, mobDep, testDep ] = [ 'webDepartment', 'mobileDepartment', 'testingDepartment' ];
@@ -145,8 +146,9 @@ function startCompanyDuring(days = 10) {
 
       console.log(`total : ${johnGreen.completedProjects.length}`)
 
-      const completedProjectsSorted = johnGreen.completedProjects
-        .sort( helpers.sortArrayOfObjectsByKey('_id', false) );
+      const completedProjectsSorted = _.orderBy(
+        johnGreen.completedProjects, ['_id'], ['asc']
+      );
 
       for (let proj of completedProjectsSorted) {
         console.log(`* id = ${proj._id}\t=>`, JSON.stringify( proj ));

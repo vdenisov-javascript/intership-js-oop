@@ -1,5 +1,6 @@
+import * as _ from 'lodash';
+
 import { Project, Company, Department } from './';
-import * as helpers from '../shared/helpers';
 
 
 export class Director {
@@ -37,19 +38,15 @@ export class Director {
 
   // get (generate) new projects
   public getNewProjects(count?: number) {
-    if (!count) {
-      count = Math.floor(
-        Math.random() * Director.maxProjectsForDay 
-      );
-    }
+    const needToCreate = count || _.random(0, Director.maxProjectsForDay);
     
-    for (let i = 0; i <= count; i ++) {
+    for (let i = 0; i <= needToCreate; i ++) {
       this.newProjects.push(
         new Project(
           // random type
-          helpers.getRandomElementFromArray( Director.variantsForProject.type ),
+          _.sample( Director.variantsForProject.type ),
           // random level
-          helpers.getRandomElementFromArray( Director.variantsForProject.level ),
+          _.sample( Director.variantsForProject.level ),
         )
       );
     }
