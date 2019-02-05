@@ -36,12 +36,12 @@ export class Project {
     this._deadline = this._level;
   }
 
-  public testProject() {
+  public startTesting() {
     this._status    = ProjectStatus.Testing;
     this._deadline  = 1;
   }
 
-  public completeProject() {
+  public complete() {
     this._status    = ProjectStatus.Completed;
     this._deadline  = 0;
   }

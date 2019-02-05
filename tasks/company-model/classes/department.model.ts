@@ -5,8 +5,6 @@ import { Employee, Project } from './';
 
 export class Department {
 
-  private static maxLazyDaysForEmployee = 3;
-
   private _speciality:            string;
 
   private _freeEmployees:         Array<Employee>;
@@ -20,7 +18,8 @@ export class Department {
 
   get speciality():       string { return this._speciality; }
 
-  get freeEmployees():    Array<Employee> { return this._freeEmployees };
+  get freeEmployees():    Array<Employee> { return this._freeEmployees; }
+  set freeEmployees(arg: Array<Employee>) { this._freeEmployees = arg;  }
   get busyEmployees():    Array<Employee> { return this._busyEmployees };
 
   get currentProjects():  Array<Project> { return this._currentProjects; }
@@ -50,20 +49,15 @@ export class Department {
   }
 
   public beginExecutionOfProject(project: Project): void {
-    let requiredCount: number;
-    
-    if (project.status === 'new') {
-      requiredCount = (project.type === 'web') ? 1 : project.level;
-    } else {
-      requiredCount = 1;
-    }
+    let requiredCount = (project.status === 'new')
+      ? ((project.type === 'web') ? 1 : project.level)
+      : 1;
 
     const requiredEmployees = this._freeEmployees.splice(0, requiredCount);
     for (const employee of requiredEmployees) {
       employee.takeProject(project);
     }
     this._busyEmployees.push( ...requiredEmployees );
-  
   }
 
   public completeDayForEmployees(): void {
@@ -74,11 +68,7 @@ export class Department {
     for (let project of this._currentProjects) {
       project.reduceDeadline()
       if (project.checkThatTimeOut()) {
-
-        (project.status === 'new')
-          ? project.testProject()
-          : project.completeProject();
-
+        (project.status === 'new') ? (project.startTesting()) : (project.complete());
         this._executedProjects.push(project);
       } else {
         currProjArr.push(project);
@@ -111,23 +101,6 @@ export class Department {
     // } inspection for busy employees
   }
 
-  public fireLaziestEmployee() {
-    const candidate = _.orderBy(
-      this._freeEmployees.filter((employee: Employee) => {
-        return employee.relaxDays > Department.maxLazyDaysForEmployee;
-      }),
-      ['skills'], ['asc']
-    ).shift();      
-
-    if (candidate) {
-      this._freeEmployees = this._freeEmployees.filter((employee: Employee) => {
-        employee.id !== candidate.id;
-      });
-
-      this._counterFiredEmployees += 1;
-    }    
-  }
-
   public getStatisticForEmployees() {
     return {
       hiredEmployees: this._counterHiredEmployees,
@@ -138,6 +111,10 @@ export class Department {
   public addNewEmployee(employee: Employee) {
     this._freeEmployees.push(employee);
     this._counterHiredEmployees += 1;
+  }
+
+  public increaseCounterFired() {
+    this._counterFiredEmployees += 1;
   }
 
   public addCurrentProject(project: Project) {

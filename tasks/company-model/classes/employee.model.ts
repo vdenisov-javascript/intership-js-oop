@@ -9,7 +9,8 @@ enum EmployeeStatus {
 
 export class Employee {
 
-  private static _lastId = 0;
+  private static _lastId      = 0;
+  public  static maxLazyDays  = 3;
 
   private _id:              number;
   private _status:          string;
