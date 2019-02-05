@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { Director, Company } from './classes';
 
 
-function startCompanyDuring(days = 10) {
+function startCompanyDuring(days: number) {
 
   // create director and company
   const johnGreen = new Director('John Green');
@@ -164,7 +164,7 @@ function startCompanyDuring(days = 10) {
 }
 
 
-const statistic = startCompanyDuring(10);
+const statistic = startCompanyDuring(100);
 console.log(
   '\n\n >>> TOTAL STATISTICS <<< \n\n',
   JSON.stringify(statistic, null, 4)
