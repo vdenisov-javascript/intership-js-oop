@@ -37,13 +37,13 @@ export class Project {
   }
 
   public testProject() {
-    this._status = ProjectStatus.Testing;
-    this._deadline = 1;
+    this._status    = ProjectStatus.Testing;
+    this._deadline  = 1;
   }
 
   public completeProject() {
-    this._status = ProjectStatus.Completed;
-    this._deadline = 0;
+    this._status    = ProjectStatus.Completed;
+    this._deadline  = 0;
   }
 
   public checkThatTimeOut() {
