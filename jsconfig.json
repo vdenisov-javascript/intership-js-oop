@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "target": "es5"
+  },
   "typeAcquisition": {
     "include": [
       "lodash"
