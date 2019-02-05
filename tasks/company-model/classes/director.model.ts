@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Project, Company, Department } from './';
+import { Company, Department, Employee, Project } from './';
 
 
 export class Director {
@@ -84,8 +84,7 @@ export class Director {
     const isDepartHasResources = chosenDepart.checkResourcesForProject(proj);
     
     if (isDepartHasResources) {
-      // chosenBuffer.push(proj);
-      chosenDepart.currentProjects.push(proj);
+      chosenDepart.addCurrentProject(proj);
       chosenDepart.beginExecutionOfProject(proj);
       return true;
     } else {
@@ -105,9 +104,28 @@ export class Director {
       }
     }
 
-    this._webDepartment.hireEmployeesInAmountOf( needToHire.web );
-    this._mobileDepartment.hireEmployeesInAmountOf( needToHire.mobile );
-    this._testingDepartment.hireEmployeesInAmountOf( needToHire.testing );
+    this._hireEmployeesInAmountOf(this._webDepartment, needToHire.web);
+    this._hireEmployeesInAmountOf(this._mobileDepartment, needToHire.mobile);
+    this._hireEmployeesInAmountOf(this._testingDepartment, needToHire.testing);
+  }
+
+  private _hireEmployeesInAmountOf(department: Department, countNeedToHire: number) {
+    const freeCount = department.freeEmployees.length
+    const notEnough = countNeedToHire - freeCount;
+    
+    if (notEnough > 0) {
+      console.log(`
+        #${ department.speciality }
+          * need : ${ countNeedToHire }
+          * free : ${ freeCount }
+          * hire : ${ notEnough }
+      `);
+
+      for (let i = 0; i < notEnough; i++) {
+        const worker = new Employee(department.speciality);
+        department.addNewEmployee(worker);
+      }
+    }
   }
 
   public checkExecutedProjectsForEachDepartment() {

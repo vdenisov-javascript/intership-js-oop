@@ -7,6 +7,8 @@ export class Department {
 
   private static maxLazyDaysForEmployee = 3;
 
+  private _speciality:            string;
+
   private _freeEmployees:         Array<Employee>;
   private _busyEmployees:         Array<Employee>;
 
@@ -16,10 +18,17 @@ export class Department {
   private _counterHiredEmployees: number;
   private _counterFiredEmployees: number;
 
+  get speciality():       string { return this._speciality; }
+
+  get freeEmployees():    Array<Employee> { return this._freeEmployees };
+  get busyEmployees():    Array<Employee> { return this._busyEmployees };
+
   get currentProjects():  Array<Project> { return this._currentProjects; }
   get executedProjects(): Array<Project> { return this._executedProjects; }
 
-  constructor(private _speciality: string) {
+  constructor(spec: string) {
+    this._speciality = spec;
+
     this._currentProjects = [];
     this._executedProjects = [];
 
@@ -55,26 +64,6 @@ export class Department {
     }
     this._busyEmployees.push( ...requiredEmployees );
   
-  }
-
-  public hireEmployeesInAmountOf(count: number): void {
-    const freeCount = this._freeEmployees.length;
-    const notEnough = count - freeCount;
-    
-    if (notEnough > 0) {
-      console.log(`
-        #${ this._speciality }
-          * free : ${ this._freeEmployees.length }
-          * need : ${ count }
-          * hire : ${ notEnough }
-      `);
-
-      for (let i = 0; i < notEnough; i++) {
-        const worker = new Employee(this._speciality);
-        this._freeEmployees.push(worker);
-        this._counterHiredEmployees += 1;
-      }
-    }
   }
 
   public completeDayForEmployees(): void {
@@ -144,6 +133,11 @@ export class Department {
       hiredEmployees: this._counterHiredEmployees,
       firedEmployees: this._counterFiredEmployees,
     };
+  }
+
+  public addNewEmployee(employee: Employee) {
+    this._freeEmployees.push(employee);
+    this._counterHiredEmployees += 1;
   }
 
   public addCurrentProject(project: Project) {
