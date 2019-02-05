@@ -7,36 +7,36 @@ export class Department {
 
   private static maxLazyDaysForEmployee = 3;
 
-  public currentProjects: Array<Project>;
-  public executedProjects: Array<Project>;
+  private _freeEmployees:         Array<Employee>;
+  private _busyEmployees:         Array<Employee>;
 
-  public freeEmployees: Array<Employee>;
-  public busyEmployees: Array<Employee>;
+  private _currentProjects:       Array<Project>;
+  private _executedProjects:      Array<Project>;
 
-  public counterHiredEmployees: number;
-  public counterFiredEmployees: number;
+  private _counterHiredEmployees: number;
+  private _counterFiredEmployees: number;
 
-  constructor(
-    public name: string,
-    public speciality: string,
-  ) {
-    this.currentProjects = [];
-    this.executedProjects = [];
+  get currentProjects():  Array<Project> { return this._currentProjects; }
+  get executedProjects(): Array<Project> { return this._executedProjects; }
 
-    this.freeEmployees = [];
-    this.busyEmployees = [];
+  constructor(private _speciality: string) {
+    this._currentProjects = [];
+    this._executedProjects = [];
 
-    this.counterHiredEmployees = 0;
-    this.counterFiredEmployees = 0;
+    this._freeEmployees = [];
+    this._busyEmployees = [];
+
+    this._counterHiredEmployees = 0;
+    this._counterFiredEmployees = 0;
   }
 
   public checkResourcesForProject(project: Project): boolean {
     if (project.status === 'new') {
       return (project.type === 'web')
-        ? this.freeEmployees.length >= 1
-        : this.freeEmployees.length >= project.level
+        ? this._freeEmployees.length >= 1
+        : this._freeEmployees.length >= project.level
     } else {
-      return this.freeEmployees.length >= 1;
+      return this._freeEmployees.length >= 1;
     }
   }
 
@@ -49,30 +49,30 @@ export class Department {
       requiredCount = 1;
     }
 
-    const requiredEmployees = this.freeEmployees.splice(0, requiredCount);
+    const requiredEmployees = this._freeEmployees.splice(0, requiredCount);
     for (const employee of requiredEmployees) {
       employee.takeProject(project);
     }
-    this.busyEmployees.push( ...requiredEmployees );
+    this._busyEmployees.push( ...requiredEmployees );
   
   }
 
   public hireEmployeesInAmountOf(count: number): void {
-    const freeCount = this.freeEmployees.length;
+    const freeCount = this._freeEmployees.length;
     const notEnough = count - freeCount;
     
     if (notEnough > 0) {
       console.log(`
-        #${ this.speciality }
-          * free : ${ this.freeEmployees.length }
+        #${ this._speciality }
+          * free : ${ this._freeEmployees.length }
           * need : ${ count }
           * hire : ${ notEnough }
       `);
 
       for (let i = 0; i < notEnough; i++) {
-        const worker = new Employee(this.speciality);
-        this.freeEmployees.push(worker);
-        this.counterHiredEmployees += 1;
+        const worker = new Employee(this._speciality);
+        this._freeEmployees.push(worker);
+        this._counterHiredEmployees += 1;
       }
     }
   }
@@ -82,7 +82,7 @@ export class Department {
     // inspection for current projects {
     const currProjArr = [];
 
-    for (let project of this.currentProjects) {
+    for (let project of this._currentProjects) {
       project.reduceDeadline()
       if (project.checkThatTimeOut()) {
 
@@ -90,25 +90,25 @@ export class Department {
           ? project.testProject()
           : project.completeProject();
 
-        this.executedProjects.push(project);
+        this._executedProjects.push(project);
       } else {
         currProjArr.push(project);
       }
     }
 
-    this.currentProjects = currProjArr;
+    this._currentProjects = currProjArr;
     // } inspection for current projects
 
     // inspection for free employees {
-    for (let employee of this.freeEmployees) {
-      employee.relaxDays += 1;
+    for (let employee of this._freeEmployees) {
+      employee.addRelaxDay();
     }
     // } inspection for free employees
 
     // inspection for busy employees {
     const [ freeArr, busyArr,  ] = [ [], [] ];
 
-    for (let employee of this.busyEmployees) {
+    for (let employee of this._busyEmployees) {
       if (employee.currentProject.checkThatTimeOut()) {
         employee.leaveProject();
         freeArr.push(employee);
@@ -117,32 +117,41 @@ export class Department {
       }
     }
 
-    this.freeEmployees.push( ...freeArr );
-    this.busyEmployees = busyArr;
+    this._freeEmployees.push( ...freeArr );
+    this._busyEmployees = busyArr;
     // } inspection for busy employees
   }
 
   public fireLaziestEmployee() {
-    const lazyEmployees = this.freeEmployees.filter((employee: Employee) => {
-      return employee.relaxDays > Department.maxLazyDaysForEmployee;
-    });
-
-    const candidate = _.orderBy(lazyEmployees, ['asc'], ['desc']).shift();
+    const candidate = _.orderBy(
+      this._freeEmployees.filter((employee: Employee) => {
+        return employee.relaxDays > Department.maxLazyDaysForEmployee;
+      }),
+      ['skills'], ['asc']
+    ).shift();      
 
     if (candidate) {
-      this.freeEmployees = this.freeEmployees.filter((employee: Employee) => {
-        employee._id !== candidate._id;
+      this._freeEmployees = this._freeEmployees.filter((employee: Employee) => {
+        employee.id !== candidate.id;
       });
 
-      this.counterFiredEmployees += 1;
+      this._counterFiredEmployees += 1;
     }    
   }
 
   public getStatisticForEmployees() {
     return {
-      hiredEmployees: this.counterHiredEmployees,
-      firedEmployees: this.counterFiredEmployees,
+      hiredEmployees: this._counterHiredEmployees,
+      firedEmployees: this._counterFiredEmployees,
     };
+  }
+
+  public addCurrentProject(project: Project) {
+    this._currentProjects.push(project);
+  }
+
+  public clearExecutedProjects() {
+    this._executedProjects = [];
   }
 
 }

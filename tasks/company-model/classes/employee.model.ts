@@ -15,21 +15,22 @@ export class Employee {
   private _status:          string;
   private _skills:          number;
   private _relaxDays:       number;
+  private _speciality:      string;
   private _currentProject:  Project;
 
   get id():             number  { return this._id; }
   get status():         string  { return this._status; }
   get skills():         number  { return this._skills; }
   get relaxDays():      number  { return this._relaxDays; }
+  get speciality():     string  { return this._speciality; }
   get currentProject(): Project { return this._currentProject; }
 
-  constructor(
-    public speciality: string,
-  ) {
+  constructor(spec: string) {
     this._id              = ++Employee._lastId;
     this._status          = EmployeeStatus.Free;
     this._skills          = 0;
     this._relaxDays       = 0;
+    this._speciality      = spec;
     this._currentProject  = null;   
   }
 

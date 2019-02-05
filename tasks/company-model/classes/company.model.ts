@@ -1,19 +1,22 @@
-import { Director, Department } from './';
+import { Department } from './';
 
 
 export class Company {
 
-  public webDepartment: Department;
-  public mobileDepartment: Department;
-  public testingDepartment: Department;
+  private _webDepartment:      Department;
+  private _mobileDepartment:   Department;
+  private _testingDepartment:  Department;
 
-  constructor(
-    public name: string,
-    public director: Director,
-  ) {}
+  get webDepartment():      Department { return this._webDepartment; }
+  get mobileDepartment():   Department { return this._mobileDepartment; }
+  get testingDepartment():  Department { return this._testingDepartment; }
 
-  public createDepartment(name: string, speciality: string): void {
-    this[name] = new Department(name, speciality);
+  constructor(private _name: string) {}
+
+  public createDepartments(): void {
+    this._webDepartment     = new Department('web');
+    this._mobileDepartment  = new Department('mobile');
+    this._testingDepartment = new Department('testing');
   }
 
 }

@@ -8,17 +8,13 @@ function startCompanyDuring(days = 10) {
 
   // create director and company
   const johnGreen = new Director('John Green');
-  const enterprise = new Company('Enterprise', johnGreen);
+  const enterprise = new Company('Enterprise');
 
   // create departments in company
-  const [ webDep, mobDep, testDep ] = [ 'webDepartment', 'mobileDepartment', 'testingDepartment' ];
-
-  enterprise.createDepartment(webDep, 'web');
-  enterprise.createDepartment(mobDep, 'mobile');
-  enterprise.createDepartment(testDep, 'testing');
+  enterprise.createDepartments();
 
   // transfer of company management to director
-  johnGreen.manage(enterprise, webDep, mobDep, testDep);
+  johnGreen.manage(enterprise);
 
   // ############################################################
 
@@ -147,11 +143,11 @@ function startCompanyDuring(days = 10) {
       console.log(`total : ${johnGreen.completedProjects.length}`)
 
       const completedProjectsSorted = _.orderBy(
-        johnGreen.completedProjects, ['_id'], ['asc']
+        johnGreen.completedProjects, ['id'], ['asc']
       );
 
       for (let proj of completedProjectsSorted) {
-        console.log(`* id = ${proj._id}\t=>`, JSON.stringify( proj ));
+        console.log(`* id = ${proj.id}\t=>`, JSON.stringify( proj ));
       }
     }
   
