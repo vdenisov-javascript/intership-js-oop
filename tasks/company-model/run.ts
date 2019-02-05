@@ -168,7 +168,7 @@ function startCompanyDuring(days = 10) {
 }
 
 
-const statistic = startCompanyDuring(100);
+const statistic = startCompanyDuring(10);
 console.log(
   '\n\n >>> TOTAL STATISTICS <<< \n\n',
   JSON.stringify(statistic, null, 4)

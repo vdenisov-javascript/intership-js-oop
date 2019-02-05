@@ -17,48 +17,48 @@ export class Project {
     level: [ 1, 2, 3 ],
   };
 
-  public _id: number;
-  public type: string;
-  public level: number;
-  public status: string;
-  public deadline: number;
+  private _id: number;
+  get id(): number    { return this._id; }
+  set id(arg: number) { this._id = arg;  }
+
+  private _type: string;
+  get type(): string    { return this._type; }
+  set type(arg: string) { this._type = arg;  }
+
+  private _level: number;
+  get level(): number    { return this._level; }
+  set level(arg: number) { this._level = arg;  }
+
+  private _status: string;
+  get status(): string    { return this._status; }
+  set status(arg: string) { this._status = arg;  }
+
+  private _deadline: number;
 
   constructor() {
-    this._id      = ++Project._lastId;
+    this.id       = ++Project._lastId;
     this.type     = _.sample( Project._params.type );
     this.level    = _.sample( Project._params.level );
     this.status   = ProjectStatus.New;
-    this.deadline = this.level;
+    this._deadline = this.level;
   }
 
   public testProject() {
     this.status = ProjectStatus.Testing;
-    this.deadline = 1;
+    this._deadline = 1;
   }
 
   public completeProject() {
     this.status = ProjectStatus.Completed;
-    this.deadline = 0;
-  }
-
-  public checkThatStatusIs(str: string) {
-    return (this.status === str);
-  }
-
-  public checkThatTypeIs(str: string) {
-    return (this.type === str);
+    this._deadline = 0;
   }
 
   public checkThatTimeOut() {
-    return (this.deadline === 0);
-  }
-
-  public getLevel() {
-    return this.level;
+    return (this._deadline === 0);
   }
 
   public reduceDeadline() {
-    this.deadline -= 1;
+    this._deadline -= 1;
   }
 
 }

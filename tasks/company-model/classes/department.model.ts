@@ -31,10 +31,10 @@ export class Department {
   }
 
   public checkResourcesForProject(project: Project): boolean {
-    if (project.checkThatStatusIs('new')) {
-      return project.checkThatTypeIs('web')
+    if (project.status === 'new') {
+      return (project.type === 'web')
         ? this.freeEmployees.length >= 1
-        : this.freeEmployees.length >= project.getLevel()
+        : this.freeEmployees.length >= project.level
     } else {
       return this.freeEmployees.length >= 1;
     }
@@ -43,8 +43,8 @@ export class Department {
   public beginExecutionOfProject(project: Project): void {
     let requiredCount: number;
     
-    if (project.checkThatStatusIs('new')) {
-      requiredCount = project.checkThatTypeIs('web') ? 1 : project.getLevel();
+    if (project.status === 'new') {
+      requiredCount = (project.type === 'web') ? 1 : project.level;
     } else {
       requiredCount = 1;
     }
@@ -86,7 +86,7 @@ export class Department {
       project.reduceDeadline()
       if (project.checkThatTimeOut()) {
 
-        project.checkThatStatusIs('new')
+        (project.status === 'new')
           ? project.testProject()
           : project.completeProject();
 
