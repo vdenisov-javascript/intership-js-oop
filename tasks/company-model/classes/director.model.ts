@@ -2,28 +2,29 @@ import * as _ from 'lodash';
 
 import { Company, Department, Employee, Project } from './';
 
-
 export class Director {
+
+  /* tslint:disable:variable-name */
 
   private static _maxProjectsForDay = 4;
 
   // departments
-  private _webDepartment:     Department;
-  private _mobileDepartment:  Department;
+  private _webDepartment: Department;
+  private _mobileDepartment: Department;
   private _testingDepartment: Department;
 
   // projects in buffer
-  private _newProjects:       Array<Project>;
-  private _awaitingProjects:  Array<Project>;
-  private _completedProjects: Array<Project>;
+  private _newProjects: Project[];
+  private _awaitingProjects: Project[];
+  private _completedProjects: Project[];
 
-  get webDepartment():      Department { return this._webDepartment; }
-  get mobileDepartment():   Department { return this._mobileDepartment; }
-  get testingDepartment():  Department { return this._testingDepartment; }
+  get webDepartment(): Department { return this._webDepartment; }
+  get mobileDepartment(): Department { return this._mobileDepartment; }
+  get testingDepartment(): Department { return this._testingDepartment; }
 
-  get newProjects():        Array<Project> { return this._newProjects; }
-  get awaitingProjects():   Array<Project> { return this._awaitingProjects; }
-  get completedProjects():  Array<Project> { return this._completedProjects; }
+  get newProjects(): Project[] { return this._newProjects; }
+  get awaitingProjects(): Project[] { return this._awaitingProjects; }
+  get completedProjects(): Project[] { return this._completedProjects; }
 
   constructor(private _name: string) {
     this._newProjects = [];
@@ -41,7 +42,7 @@ export class Director {
   // get (generate) new projects
   public getNewProjects(count?: number) {
     const needToCreate = count || _.random(0, Director._maxProjectsForDay);
-    
+
     for (let i = 0; i < needToCreate; i ++) {
       this._newProjects.push(new Project());
     }
@@ -53,7 +54,7 @@ export class Director {
     this._newProjects.forEach((proj: Project) => {
       const success = this.transferProject( proj );
       // console.log('success', success);
-      if (!success) buffer.push(proj);
+      if (!success) { buffer.push(proj); }
     });
     this._newProjects = [];
     this._awaitingProjects.push( ...buffer );
@@ -64,28 +65,10 @@ export class Director {
     const buffer = [];
     this._awaitingProjects.forEach((proj: Project) => {
       const success = this.transferProject( proj );
-      if (!success) buffer.push(proj);
+      if (!success) { buffer.push(proj); }
     });
 
     this._awaitingProjects = [ ...buffer ];
-  }
-
-  // check type of project and transfer it to department
-  // if this department has enough resources
-  private transferProject(proj: Project) {
-    const chosenDepart = (proj.status === 'new')
-      ? ((proj.type === 'web') ? this._webDepartment : this._mobileDepartment)
-      : this._testingDepartment
-
-    const isDepartHasResources = chosenDepart.checkResourcesForProject(proj);
-    
-    if (isDepartHasResources) {
-      chosenDepart.addCurrentProject(proj);
-      chosenDepart.beginExecutionOfProject(proj);
-      return true;
-    }
-    
-    return false;
   }
 
   public hireEmployeesForAwaitingProjects() {
@@ -133,7 +116,7 @@ export class Director {
     this._testingDepartment.completeDayForEmployees();
   }
 
-  public collectStatisticsFromEachDepartment(): Object {
+  public collectStatisticsFromEachDepartment(): object {
     const totalStats = {
       hiredEmployees: 0,
       firedEmployees: 0,
@@ -141,27 +124,28 @@ export class Director {
     };
 
     const webStats = this._webDepartment.getStatisticForEmployees();
-    totalStats.hiredEmployees += webStats['hiredEmployees'];
-    totalStats.firedEmployees += webStats['firedEmployees'];
+    totalStats.hiredEmployees += webStats.hiredEmployees;
+    totalStats.firedEmployees += webStats.firedEmployees;
 
     const mobileStats = this._mobileDepartment.getStatisticForEmployees();
-    totalStats.hiredEmployees += mobileStats['hiredEmployees'];
-    totalStats.firedEmployees += mobileStats['firedEmployees'];
+    totalStats.hiredEmployees += mobileStats.hiredEmployees;
+    totalStats.firedEmployees += mobileStats.firedEmployees;
 
     const testingStats = this._mobileDepartment.getStatisticForEmployees();
-    totalStats.hiredEmployees += testingStats['hiredEmployees'];
-    totalStats.firedEmployees += testingStats['firedEmployees'];
-    
+    totalStats.hiredEmployees += testingStats.hiredEmployees;
+    totalStats.firedEmployees += testingStats.firedEmployees;
+
     totalStats.completedProjects = this._completedProjects.length;
 
     return totalStats;
   }
 
   private _hireEmployeesInAmountOf(department: Department, countNeedToHire: number) {
-    const freeCount = department.freeEmployees.length
+    const freeCount = department.freeEmployees.length;
     const notEnough = countNeedToHire - freeCount;
-    
+
     if (notEnough > 0) {
+      // tslint:disable-next-line:no-console
       console.log(`
         #${ department.speciality }
           * need : ${ countNeedToHire }
@@ -176,22 +160,39 @@ export class Director {
     }
   }
 
+  // check type of project and transfer it to department
+  // if this department has enough resources
+  private transferProject(proj: Project) {
+    const chosenDepart = (proj.status === 'new')
+      ? ((proj.type === 'web') ? this._webDepartment : this._mobileDepartment)
+      : this._testingDepartment;
+
+    const isDepartHasResources = chosenDepart.checkResourcesForProject(proj);
+
+    if (isDepartHasResources) {
+      chosenDepart.addCurrentProject(proj);
+      chosenDepart.beginExecutionOfProject(proj);
+      return true;
+    }
+
+    return false;
+  }
+
   private _fireLaziestEmployeeIn(department: Department) {
     const arrayOfFree = department.freeEmployees;
 
     const candidate = _.orderBy(
       arrayOfFree.filter((employee: Employee) => {
-        return employee.relaxDays > Employee.maxLazyDays
+        return employee.relaxDays > Employee.maxLazyDays;
       }),
-      ['skills'], ['asc']
-    ).shift();
+      ['skills'], ['asc']).shift();
 
     if (candidate) {
       department.freeEmployees = arrayOfFree.filter((employee: Employee) => {
-        employee.id !== candidate.id;
+        return employee.id !== candidate.id;
       });
       department.increaseCounterFired();
     }
   }
-  
+
 }
