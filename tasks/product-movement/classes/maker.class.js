@@ -1,9 +1,7 @@
 const _ = require('lodash');
 
-
 class Maker {
-
-  constructor() {
+  constructor () {
     this.minProds = 50;
     this.maxProds = 150;
 
@@ -11,24 +9,22 @@ class Maker {
     this.countCreatedTotal = [];
   }
 
-  createProductsAgain() {
+  createProductsAgain () {
     const count = _.random(this.minProds, this.maxProds);
     // manufacturing technology is classified !!!
     this.countCreatedToday = count;
     this.countCreatedTotal.push(count);
   }
 
-  getCountCreatedToday() {
+  getCountCreatedToday () {
     return this.countCreatedToday;
   }
 
-  getLastDaysCreatedCount(days = 3) {
+  getLastDaysCreatedCount (days = 3) {
     return this.countCreatedTotal
-      .slice( -1 * days )
-      .reduce( (a, b) => a + b );
+      .slice(-1 * days)
+      .reduce((a, b) => a + b);
   }
-
 }
-
 
 module.exports = Maker;

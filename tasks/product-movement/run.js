@@ -2,10 +2,9 @@ const _ = require('lodash');
 
 const { Maker, Consumer, Agent } = require('./classes');
 
-
 // ######################### //
 
-function getStatisticOfMovementProduct(numberOfDays) {
+function getStatisticOfMovementProduct (numberOfDays) {
   const Bob = new Maker();
   const Alice = new Consumer();
   const Garfild = new Agent();
@@ -13,27 +12,26 @@ function getStatisticOfMovementProduct(numberOfDays) {
   const totalStatistic = [];
 
   for (let day = 1; day <= numberOfDays; day++) {
-
     Bob.createProductsAgain();
 
     Alice.requireProductsAgain();
 
     Garfild.deliverAsMuchAsPossible(
       Bob.getCountCreatedToday(),
-      Alice.getCountRequiredToday(),
+      Alice.getCountRequiredToday()
     );
 
     const statisticPerDay = {
-      currentDay:         day,
+      currentDay: day,
 
-      createdToday:       Bob.getCountCreatedToday(),
-      requiredToday:      Alice.getCountRequiredToday(),
-      deliveredToday:     Garfild.getCountDeliveredToday(),
+      createdToday: Bob.getCountCreatedToday(),
+      requiredToday: Alice.getCountRequiredToday(),
+      deliveredToday: Garfild.getCountDeliveredToday(),
 
-      createdPer3Days:    Bob.getLastDaysCreatedCount(3),
-      deliveredPer3Days:  Garfild.getLastDaysDeliveredCount(3),
+      createdPer3Days: Bob.getLastDaysCreatedCount(3),
+      deliveredPer3Days: Garfild.getLastDaysDeliveredCount(3),
 
-      efficiencyFactor:   Garfild.calculateEfficiency(),
+      efficiencyFactor: Garfild.calculateEfficiency()
     };
 
     totalStatistic.push(statisticPerDay);
@@ -75,13 +73,12 @@ if (require.main === module) {
       row.createdPer3Days,
       row.deliveredPer3Days,
 
-      `${ _.round(row.efficiencyFactor * 100) } %`
+      `${_.round(row.efficiencyFactor * 100)} %`
     ]);
   }
 
   console.log(statisticTable.toString());
 }
-
 
 module.exports = {
   getStatisticOfMovementProduct
