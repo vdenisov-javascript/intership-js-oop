@@ -1,5 +1,5 @@
 module.exports = {
-  Maker:    require('./maker.class'),
+  Maker: require('./maker.class'),
   Consumer: require('./consumer.class'),
-  Agent:    require('./agent.class'),
-}
+  Agent: require('./agent.class')
+};

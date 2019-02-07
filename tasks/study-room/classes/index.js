@@ -1,6 +1,6 @@
 module.exports = {
-  Course:   require('./course.class'),
-  Theme:    require('./theme.class'),
+  Course: require('./course.class'),
+  Theme: require('./theme.class'),
   Question: require('./question.class'),
-  Answer:   require('./answer.class'),
-}
+  Answer: require('./answer.class')
+};

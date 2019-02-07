@@ -1,10 +1,10 @@
 class Question {
-  constructor(description) {
+  constructor (description) {
     this.description = description;
     this.answers = [];
   }
 
-  addAnswer(answerObj) {
+  addAnswer (answerObj) {
     this.answers.push(answerObj);
   }
 }

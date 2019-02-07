@@ -1,10 +1,10 @@
 class Course {
-  constructor(name) {
+  constructor (name) {
     this.name = name;
     this.themes = [];
   }
 
-  addTheme(themeObj) {
+  addTheme (themeObj) {
     this.themes.push(themeObj);
   }
 }

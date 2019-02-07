@@ -2,28 +2,29 @@ import * as _ from 'lodash';
 
 import { Employee, Project } from './';
 
-
 export class Department {
 
-  private _speciality:            string;
+  /* tslint:disable:variable-name */
 
-  private _freeEmployees:         Array<Employee>;
-  private _busyEmployees:         Array<Employee>;
+  private _speciality: string;
 
-  private _currentProjects:       Array<Project>;
-  private _executedProjects:      Array<Project>;
+  private _freeEmployees: Employee[];
+  private _busyEmployees: Employee[];
+
+  private _currentProjects: Project[];
+  private _executedProjects: Project[];
 
   private _counterHiredEmployees: number;
   private _counterFiredEmployees: number;
 
-  get speciality():       string { return this._speciality; }
+  get speciality(): string { return this._speciality; }
 
-  get freeEmployees():    Array<Employee> { return this._freeEmployees; }
-  set freeEmployees(arg: Array<Employee>) { this._freeEmployees = arg;  }
-  get busyEmployees():    Array<Employee> { return this._busyEmployees };
+  get freeEmployees(): Employee[] { return this._freeEmployees; }
+  set freeEmployees(arg: Employee[]) { this._freeEmployees = arg;  }
+  get busyEmployees(): Employee[] { return this._busyEmployees; }
 
-  get currentProjects():  Array<Project> { return this._currentProjects; }
-  get executedProjects(): Array<Project> { return this._executedProjects; }
+  get currentProjects(): Project[] { return this._currentProjects; }
+  get executedProjects(): Project[] { return this._executedProjects; }
 
   constructor(spec: string) {
     this._speciality = spec;
@@ -42,14 +43,14 @@ export class Department {
     if (project.status === 'new') {
       return (project.type === 'web')
         ? this._freeEmployees.length >= 1
-        : this._freeEmployees.length >= project.level
+        : this._freeEmployees.length >= project.level;
     } else {
       return this._freeEmployees.length >= 1;
     }
   }
 
   public beginExecutionOfProject(project: Project): void {
-    let requiredCount = (project.status === 'new')
+    const requiredCount = (project.status === 'new')
       ? ((project.type === 'web') ? 1 : project.level)
       : 1;
 
@@ -65,8 +66,8 @@ export class Department {
     // inspection for current projects {
     const currProjArr = [];
 
-    for (let project of this._currentProjects) {
-      project.reduceDeadline()
+    for (const project of this._currentProjects) {
+      project.reduceDeadline();
       if (project.checkThatTimeOut()) {
         (project.status === 'new') ? (project.startTesting()) : (project.complete());
         this._executedProjects.push(project);
@@ -79,20 +80,18 @@ export class Department {
     // } inspection for current projects
 
     // inspection for free employees {
-    for (let employee of this._freeEmployees) {
-      employee.addRelaxDay();
-    }
+    this._freeEmployees.forEach((employee: Employee) => employee.addRelaxDay);
     // } inspection for free employees
 
     // inspection for busy employees {
-    const [ freeArr, busyArr,  ] = [ [], [] ];
+    const [ freeArr, busyArr ] = [ [], [] ];
 
-    for (let employee of this._busyEmployees) {
+    for (const employee of this._busyEmployees) {
       if (employee.currentProject.checkThatTimeOut()) {
         employee.leaveProject();
         freeArr.push(employee);
       } else {
-        busyArr.push(employee)
+        busyArr.push(employee);
       }
     }
 
