@@ -1,22 +1,20 @@
-import { Director, Company, ICompany } from './classes';
 import 'colors';
+import * as _ from 'lodash';
+
+import { Director, Company } from './classes';
 
 
-function startCompanyDuring(days = 10) {
+function startCompanyDuring(days: number) {
 
   // create director and company
   const johnGreen = new Director('John Green');
-  const enterprise: ICompany = new Company('Enterprise', johnGreen);
+  const enterprise = new Company('Enterprise');
 
   // create departments in company
-  const [ webDep, mobDep, testDep ] = [ 'webDepartment', 'mobileDepartment', 'testingDepartment' ];
-
-  enterprise.createDepartment(webDep, 'web');
-  enterprise.createDepartment(mobDep, 'mobile');
-  enterprise.createDepartment(testDep, 'testing');
+  enterprise.createDepartments();
 
   // transfer of company management to director
-  johnGreen.manage(enterprise, webDep, mobDep, testDep);
+  johnGreen.manage(enterprise);
 
   // ############################################################
 
@@ -28,6 +26,17 @@ function startCompanyDuring(days = 10) {
 
         DAY #${ day }: start
   `.bgWhite.black.bold);
+
+  // Print: awaiting projects 
+  {
+    console.log(`
+      yesterday AWAITING projects
+    `.bgYellow.red.italic);
+
+    for (let proj of johnGreen.awaitingProjects) {
+      console.log(JSON.stringify( proj ));
+    }
+  }
 
   // YESTERDAY PROJECTS {
 
@@ -42,7 +51,7 @@ function startCompanyDuring(days = 10) {
   // TODAY PROJECTS {
 
     // Step: get new projects
-    johnGreen.getNewProjects(4);
+    johnGreen.getNewProjects();
 
     // Print: new projects 
     {
@@ -61,7 +70,7 @@ function startCompanyDuring(days = 10) {
     // Print: awaiting projects 
     {
       console.log(`
-        AWAITING projects
+        today AWAITING projects
       `.bgYellow.red.italic);
 
       for (let proj of johnGreen.awaitingProjects) {
@@ -133,8 +142,12 @@ function startCompanyDuring(days = 10) {
 
       console.log(`total : ${johnGreen.completedProjects.length}`)
 
-      for (let proj of johnGreen.completedProjects) {
-        console.log(`* id = ${proj._id}\t=>`, JSON.stringify( proj ));
+      const completedProjectsSorted = _.orderBy(
+        johnGreen.completedProjects, ['id'], ['asc']
+      );
+
+      for (let proj of completedProjectsSorted) {
+        console.log(`* id = ${proj.id}\t=>`, JSON.stringify( proj ));
       }
     }
   
@@ -151,7 +164,7 @@ function startCompanyDuring(days = 10) {
 }
 
 
-const statistic = startCompanyDuring(7);
+const statistic = startCompanyDuring(100);
 console.log(
   '\n\n >>> TOTAL STATISTICS <<< \n\n',
   JSON.stringify(statistic, null, 4)

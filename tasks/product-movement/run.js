@@ -1,50 +1,37 @@
-const { Maker } = require('./class.Maker');
-const { Consumer } = require('./class.Consumer');
-const { Agent } = require('./class.Agent');
+const _ = require('lodash');
 
-const helpers = require('./helpers');
+const { Maker, Consumer, Agent } = require('./classes');
 
 // ######################### //
 
-function getStatisticOfMovementProduct(numberOfDays) {
+function getStatisticOfMovementProduct (numberOfDays) {
   const Bob = new Maker();
   const Alice = new Consumer();
   const Garfild = new Agent();
 
   const totalStatistic = [];
 
-  for (let day = 0; day < numberOfDays; day++) {
-
+  for (let day = 1; day <= numberOfDays; day++) {
     Bob.createProductsAgain();
-    const makerCreatedToday = Bob.countOfCreatedProductsToday;
-    const makerCreatedLast3Days = Bob.getLastDaysCreatedCount(3);
 
     Alice.requireProductsAgain();
-    const consumerRequiredToday = Alice.countOfRequiredProductsToday;
 
-    const availableResources = helpers.trimNumberToLimit(
-      makerCreatedToday, consumerRequiredToday
-    );
-
-    Garfild.deliverProductsAgain(availableResources);
-    const agentDeliveredToday = Garfild.countOfDeliveredProductsToday;
-    const agentDeliveredLast3Days = Garfild.getLastDaysDeliveredCount(3);
-
-    const agentEfficiencyFactor = helpers.roundToSpecifiedPrecision(
-      (agentDeliveredToday / Garfild.maximumLoadCapacity), 2
+    Garfild.deliverAsMuchAsPossible(
+      Bob.getCountCreatedToday(),
+      Alice.getCountRequiredToday()
     );
 
     const statisticPerDay = {
-      currentDay: day + 1,
+      currentDay: day,
 
-      makerCreatedToday,
-      consumerRequiredToday,
-      agentDeliveredToday,
+      createdToday: Bob.getCountCreatedToday(),
+      requiredToday: Alice.getCountRequiredToday(),
+      deliveredToday: Garfild.getCountDeliveredToday(),
 
-      makerCreatedLast3Days,
-      agentDeliveredLast3Days,
+      createdPer3Days: Bob.getLastDaysCreatedCount(3),
+      deliveredPer3Days: Garfild.getLastDaysDeliveredCount(3),
 
-      agentEfficiencyFactor: `${agentEfficiencyFactor * 100} %`
+      efficiencyFactor: Garfild.calculateEfficiency()
     };
 
     totalStatistic.push(statisticPerDay);
@@ -73,26 +60,25 @@ if (require.main === module) {
     ]
   });
 
-  const staticticData = getStatisticOfMovementProduct(days = 10);
+  const staticticData = getStatisticOfMovementProduct(10);
 
   for (let row of staticticData) {
     statisticTable.push([
       row.currentDay,
 
-      row.makerCreatedToday,
-      row.consumerRequiredToday,
-      row.agentDeliveredToday,
+      row.createdToday,
+      row.requiredToday,
+      row.deliveredToday,
 
-      row.makerCreatedLast3Days,
-      row.agentDeliveredLast3Days,
+      row.createdPer3Days,
+      row.deliveredPer3Days,
 
-      row.agentEfficiencyFactor
+      `${_.round(row.efficiencyFactor * 100)} %`
     ]);
   }
 
   console.log(statisticTable.toString());
 }
-
 
 module.exports = {
   getStatisticOfMovementProduct

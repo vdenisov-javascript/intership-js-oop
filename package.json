@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "study-room": "node ./tasks/study-room/run.js",
     "study-room:test": "mocha --watch ./tests/study-room.test.js",
     "product-movement": "node ./tasks/product-movement/run.js",
     "product-movement:test": "mocha --watch ./tests/product-movement.test.js",
     "company-model": "ts-node ./tasks/company-model/run.ts",
     "company-model:alt-run": "tsc ./tasks/company-model/run.ts && node ./tasks/company-model/run.js",
     "company-model:test": "mocha --watch ./tests/company-model.test.js",
-    "tests": "mocha --watch tests/"
+    "test": "mocha --watch tests/"
   },
   "repository": {
     "type": "git",
@@ -24,11 +25,20 @@
   },
   "homepage": "https://github.com/vdenisov-dev/lds-js-oop#readme",
   "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.13.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "mocha": "^5.2.0",
     "ts-node": "^8.0.1",
     "typescript": "^3.2.4"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
+    "@types/lodash": "^4.14.120",
     "cli-table3": "^0.5.1",
     "colors": "^1.3.3"
   }
