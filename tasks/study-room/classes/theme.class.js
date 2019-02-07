@@ -1,10 +1,10 @@
 class Theme {
-  constructor(title) {
+  constructor (title) {
     this.title = title;
     this.questions = [];
   }
 
-  addQuestion(questionObj) {
+  addQuestion (questionObj) {
     this.questions.push(questionObj);
   }
 }

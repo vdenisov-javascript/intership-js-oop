@@ -2,7 +2,7 @@ const { Course, Theme, Question, Answer } = require('./classes');
 
 // ######################### //
 
-function createCourse(jsonCourse) {
+function createCourse (jsonCourse) {
   const newCourse = new Course(jsonCourse.name);
 
   // creating themes for course {
